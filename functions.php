@@ -38,27 +38,43 @@ if ( ! function_exists( 'arke_setup' ) ) :
 		add_theme_support( 'post-thumbnails' );
 
 		// This theme uses wp_nav_menu() in one location.
-		register_nav_menus( array(
-			'menu-1' => esc_html__( 'Primary Menu', 'arke' ),
-		) );
+		register_nav_menus(
+			array(
+				'menu-1' => esc_html__( 'Primary Menu', 'arke' ),
+			)
+		);
 
 		/*
 		 * Switch default core markup for search form, comment form, and comments
 		 * to output valid HTML5.
 		 */
-		add_theme_support( 'html5', array(
-			'search-form',
-			'comment-form',
-			'comment-list',
-			'gallery',
-			'caption',
-		) );
+		add_theme_support(
+			'html5',
+			array(
+				'search-form',
+				'comment-form',
+				'comment-list',
+				'gallery',
+				'caption',
+			)
+		);
+
+		// Add theme support for widgets.
+		add_theme_support( 'widgets' );
 
 		// Add theme support for selective refresh for widgets.
 		add_theme_support( 'customize-selective-refresh-widgets' );
 
 		// Add image size for blog posts, 640px wide (and unlimited height).
 		add_image_size( 'arke-blog', 640 );
+
+		add_theme_support(
+			'infinite-scroll',
+			array(
+				'container' => 'content-area',
+				'footer'    => false,
+			)
+		);
 
 	}
 endif;
@@ -67,8 +83,7 @@ add_action( 'after_setup_theme', 'arke_setup' );
 /**
  * Registers an editor stylesheet for the theme.
  */
-	add_editor_style( 'editor-style.css' );
-
+add_editor_style( 'editor-style.css' );
 
 /**
  * Set the content width in pixels, based on the theme's design and stylesheet.
@@ -78,7 +93,7 @@ add_action( 'after_setup_theme', 'arke_setup' );
  * @global int $content_width
  */
 function arke_content_width() {
-	$GLOBALS['content_width'] = apply_filters( 'arke_content_width', 1040 );
+	$GLOBALS['content_width'] = apply_filters( 'arke_content_width', 640 );
 }
 add_action( 'after_setup_theme', 'arke_content_width', 0 );
 
@@ -86,7 +101,7 @@ add_action( 'after_setup_theme', 'arke_content_width', 0 );
  * Enqueue scripts and styles.
  */
 function arke_scripts() {
-	wp_enqueue_style( 'arke-style', get_stylesheet_uri() );
+	wp_enqueue_style( 'arke-style', get_stylesheet_uri(), array(), '1.1.1' );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -103,7 +118,8 @@ if ( ! function_exists( 'arke_thumbnail' ) ) :
 	 */
 	function arke_thumbnail( $size = '' ) {
 
-		if ( has_post_thumbnail() ) { ?>
+		if ( has_post_thumbnail() ) {
+			?>
 			<div class="post-thumbnail">
 
 				<?php if ( ! is_single() ) : ?>
@@ -115,12 +131,11 @@ if ( ! function_exists( 'arke_thumbnail' ) ) :
 				<?php endif; ?>
 
 			</div><!-- .post-thumbnail -->
-		<?php
+			<?php
 		}
 
 	}
 endif;
-
 
 /**
  * Add a pingback url auto-discovery header for singularly identifiable articles.
@@ -148,14 +163,11 @@ if ( ! function_exists( 'arke_the_posts_navigation' ) ) :
 	}
 endif;
 
-$tags_list = get_the_tag_list( '', esc_html__( ', ', 'arke' ) );
-
-
 /**
  * Display the admin notice.
  */
 function arke_admin_notice() {
-	global $current_user ;
+	global $current_user;
 	$user_id = $current_user->ID;
 
 	if ( class_exists( 'Olympus_Google_Fonts' ) ) {
@@ -174,7 +186,7 @@ function arke_admin_notice() {
 				printf(
 					/* translators: 1: plugin link */
 					esc_html__( 'Easily change the font of your website with our new plugin - %1$s', 'arke' ),
-					'<a href="' . esc_url( admin_url( 'plugin-install.php?s=olympus+google+fonts&tab=search&type=term' ) ) . '">Google Fonts for WordPress</a>'
+					'<a href="' . esc_url( admin_url( 'plugin-install.php?s=olympus+google+fonts&tab=search&type=term' ) ) . '">Fonts Plugin</a>'
 				);
 				?>
 				<span style="float:right">
@@ -199,3 +211,14 @@ function arke_dismiss_admin_notice() {
 	}
 }
 add_action( 'admin_init', 'arke_dismiss_admin_notice' );
+
+if ( ! function_exists( 'wp_body_open' ) ) :
+	/**
+	 * Triggered after the opening body tag.
+	 */
+	function wp_body_open() {
+		do_action( 'wp_body_open' );
+	}
+endif;
+
+$tags_list = get_the_tag_list( '', esc_html__( ', ', 'arke' ) );

@@ -9,7 +9,6 @@
 
 get_template_part( 'header' );
 ?>
-
 				<header>
 					<h1 class="archives__heading"><?php single_post_title(); ?></h1>
 				</header>
@@ -22,14 +21,14 @@ get_template_part( 'header' );
 					'posts_per_page' => -1,
 				);
 
-				$posts = new WP_Query( $args );
+				$arke_posts = new WP_Query( $args );
 
-				if ( $posts->have_posts() ) :
+				if ( $arke_posts->have_posts() ) :
 
 					echo '<ul class="archives__list">';
 
-					while ( $posts->have_posts() ) :
-						$posts->the_post();
+					while ( $arke_posts->have_posts() ) :
+						$arke_posts->the_post();
 
 						echo '<li><a href="' . esc_url( get_the_permalink() ) . '">' . get_the_title() . '</a><span>' . esc_attr( get_the_time( 'F j, Y' ) ) . '</span></li>';
 
@@ -51,7 +50,7 @@ get_template_part( 'header' );
 				<?php
 				// translators: %1$s: theme name.
 				// translators: %2$s: theme author.
-				printf( esc_html__( 'Theme: %1$s by %2$s.', 'arke' ), '<a href="https://olympusthemes.com/themes/arke/">Arke</a>', 'Danny Cooper' );
+				printf( esc_html__( 'Theme: %1$s by %2$s.', 'arke' ), '<a href="https://wordpress.org/themes/arke/">Arke</a>', 'Danny Cooper' );
 				?>
 		</footer><!-- .site-footer -->
 		<?php wp_footer(); ?>
